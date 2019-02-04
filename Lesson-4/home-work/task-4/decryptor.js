@@ -9,18 +9,19 @@ class Decryptor  extends Transform{
 
     _transform(data, encoding, done) {
         const _data = data.payload;
+        const algorithm = data.meta.algorithm;
         const chank = {
             name: _data.name,
-            email: this._tranformHexToString(_data.email),
-            password: this._tranformHexToString(_data.password)
+            email: this._tranformToString(_data.email, algorithm),
+            password: this._tranformToString(_data.password, algorithm)
         };
 
         this.push(chank);
         done();
     }
 
-    _tranformHexToString(data) {
-        return Buffer.from(data, 'hex').toString();
+    _tranformToString(data, algorithm) {
+        return Buffer.from(data, algorithm).toString();
     }
 
 }
