@@ -14,7 +14,11 @@ class Guardian extends Transform {
     }
 
     _transform(customer, encoding, done) {
-        const { payload: { email, password }, payload, meta } = customer;
+        const {
+            payload: { email, password },
+            payload,
+            meta
+        } = customer;
 
         const encryptedCustomer = {
             payload: {

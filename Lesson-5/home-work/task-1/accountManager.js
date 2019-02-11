@@ -29,16 +29,23 @@ class AccountManager extends Writable {
         this.storage.set(id, log);
     }
 
-    decryptor(encrypt) {
-        const decipher = crypto.createDecipheriv(this.algorithm, this.key, this.iv);
-        let decrypted = decipher.update(encrypt, 'hex', 'utf8');
+    decryptor(str) {
+        const decipher = crypto.createDecipheriv(
+            this.algorithm,
+            this.key,
+            this.iv
+        );
+        let decrypted = decipher.update(str, 'hex', 'utf8');
         decrypted += decipher.final('utf8');
         return decrypted;
     }
 
     _write(customer, encoding, done) {
 
-        const { payload, meta: { algorithm, key, iv, source, signature }} = customer;
+        const {
+            payload,
+            meta: { algorithm, key, iv, source, signature }
+        } = customer;
 
         this.algorithm = algorithm;
         this.key = key;
