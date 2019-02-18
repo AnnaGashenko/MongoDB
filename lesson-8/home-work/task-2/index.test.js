@@ -1,39 +1,58 @@
 // Instruments
+
 const { Bank } = require('./');
 
 describe('Test Bank:', () => {
-    test('validate customer ', () => {
-        const bank = new Bank();
-        const customer  = {
-            name: 'Pitter Black',
-            balance: 100
-        };
-        expect(() => bank._validateCustomer(customer)).toThrow(Error);
-    });
 
     test('register ', () => {
         const bank = new Bank();
-        //const id = Date.now() + Math.floor(Math.random() * 10);
+        //bank._checkForDuplicates = jest.fn();
 
-        const mockMath = Object.create(global.Math);
-        mockMath.random = () => 0.5;
-        global.Math = jest.fn(() => mockMath);
+        global.Math.random = jest.fn(() => 0.5);
+        global.Date.now = jest.fn(() => 1550488328804);
 
-        const customer  = {
+        const customer = {
             name: 'Pitter Black',
             balance: 100
         };
 
-        expect(bank.register(customer)).toEqual(0.5);
+        expect(bank.register(customer)).toEqual(1550488328809);
+        expect(() => bank.register(customer)).toThrow(`duplicated customer for name: '${customer.name}'`);
     });
 
 
-    // test('__checkForDuplicates ', () => {
+    test('should throw on enroll if amount is 0', () => {
+        const bank = new Bank();
+        expect(() => bank.emit('add', 1550488328809, 0)).toThrow(`amount should be grater than 0`);
+
+    });
+
+    test('customer with not found', () => {
+        const bank = new Bank();
+        const personId = 1550488328809;
+        expect(() => bank.emit('add', personId, 8)).toThrow(`customer with id '${personId}' not found`);
+
+    });
+
+    // test('return balance', () => {
     //     const bank = new Bank();
-    //     const customer  = {
-    //         name: 'Pitter Black',
-    //         balance: 100
-    //     };
-    //     expect(() => bank._checkForDuplicates(customer)).toThrow(Error);
+    //     const personId = 1550488328809;
+    //     expect(bank._enroll(personId, 10)).toBe(110);
     // });
+
+
+
+
+    // test('add', () => {
+    //     const bank = new Bank();
+    //     expect(() => bank.emit('add', 1550488328809, 0)).toThrow(`amount should be grater than 0`);
+    //
+    // });
+
+
+    // test('_enroll ', () => {
+    //     const bank = new Bank();
+    //     expect(() => bank.emit('add', 1550488328809, 0)).toThrow(bank.emit('error'));
+    // });
+
 });
