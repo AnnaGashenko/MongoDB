@@ -1,39 +1,37 @@
 // Instruments
+
 const { Bank } = require('./');
 
 describe('Test Bank:', () => {
-    test('validate customer ', () => {
-        const bank = new Bank();
-        const customer  = {
-            name: 'Pitter Black',
-            balance: 100
-        };
-        expect(() => bank._validateCustomer(customer)).toThrow(Error);
-    });
 
     test('register ', () => {
         const bank = new Bank();
-        //const id = Date.now() + Math.floor(Math.random() * 10);
 
-        const mockMath = Object.create(global.Math);
-        mockMath.random = () => 0.5;
-        global.Math = jest.fn(() => mockMath);
+        global.Math.random = jest.fn(() => 0.5);
+        global.Date.now = jest.fn(() => 1550488328804);
 
-        const customer  = {
+        const customer = {
             name: 'Pitter Black',
             balance: 100
         };
 
-        expect(bank.register(customer)).toEqual(0.5);
+        expect(bank.register(customer)).toEqual(1550488328809);
+        expect(() => bank.register(customer)).toThrow(`duplicated customer for name: '${customer.name}'`);
+        expect(bank._enroll(1550488328809, 20)).toEqual(120);
+
     });
 
+    test('should throw on enroll if amount is 0', () => {
+        const bank = new Bank();
+        expect(() => bank.emit('add', 1550488328809, 0)).toThrow(`amount should be grater than 0`);
 
-    // test('__checkForDuplicates ', () => {
-    //     const bank = new Bank();
-    //     const customer  = {
-    //         name: 'Pitter Black',
-    //         balance: 100
-    //     };
-    //     expect(() => bank._checkForDuplicates(customer)).toThrow(Error);
-    // });
+    });
+
+    test('customer with not found', () => {
+        const bank = new Bank();
+        const personId = 1550488328809;
+        expect(() => bank.emit('add', personId, 8)).toThrow(`customer with id '${personId}' not found`);
+
+    });
+
 });
