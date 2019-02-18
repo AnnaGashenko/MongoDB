@@ -30,11 +30,6 @@ class Archiver extends EventEmitter{
         validateFields(data);
         validate(data);
 
-        this.on('error', ({ message }) => {
-            console.log(message);
-            process.exit(1);
-        })
-
         const r = fs.createReadStream(path.join(__dirname, inFile));
         const w = fs.createWriteStream(path.join(__dirname, outFile));
 
@@ -63,5 +58,5 @@ const algorithm = {
 };
 
 const toArchiver = new Archiver(algorithm);
-toArchiver._toZip('../data/comments.csv', '../data/comments.gz');
-//toArchiver.fromZip('../data/comments.gz', '../data/comments.csv');
+//toArchiver._toZip('../data/comments.csv', '../data/comments.gz');
+toArchiver.fromZip('../data/comments.gz', '../data/comments.csv');
